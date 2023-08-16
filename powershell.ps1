@@ -25,12 +25,12 @@ $freeSpace = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace
 Write-Host "Free memory disk C: $freeSpace GB"
 
 # Отображение сохраненных паролей Wi-Fi
-$wifiProfiles = (netsh wlan show profiles) -match "Все профили пользователей"
+$wifiProfiles = (netsh wlan show profiles) | Select-String "Все профили пользователей"
 $wifiProfiles | ForEach-Object {
-    $profileName = $_ -replace "    Все профили пользователей     : ", ""
-    $wifiPassword = (netsh wlan show profile name="$profileName" key=clear) -match "Ключ содержит :"
+    $profileName = $_.Line -replace "    Все профили пользователей     : ", ""
+    $wifiPassword = (netsh wlan show profile name="$profileName" key=clear) | Select-String "Ключ содержит"
     if ($wifiPassword) {
-        $password = $wifiPassword[0] -replace "    Ключ содержит             : ", ""
+        $password = $wifiPassword.Line -replace "    Ключ содержит             : ", ""
         Write-Host "Wi-Fi сеть: $profileName, Пароль: $password"
     }
 }
