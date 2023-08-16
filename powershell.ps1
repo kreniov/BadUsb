@@ -1,5 +1,4 @@
-# Устанавливаем кодировку консоли для поддержки русского текста
-chcp 65001
+[Console]::OutputEncoding = [Text.Encoding]::UTF8
 
 # Отображение имени компьютера
 $computerName = $env:COMPUTERNAME
